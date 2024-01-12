@@ -14,8 +14,8 @@ const app = Vue.createApp({
             }
             await axios.post('https://ec-course-api.hexschool.io/v2/admin/signin', parameter).then((res) => {
                 console.log(res);
-                const { token } = res.data;
-                document.cookie = `hextoken=${token}`;
+                const { token, expired } = res.data;
+                document.cookie = `hextoken=${token}; expires=${new Date(expired)}; path=/`;
                 window.location = "secondweek.html"
             })
                 .catch((err) => { console.log(err) });
