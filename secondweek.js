@@ -98,18 +98,32 @@ const products = [
               <input type="text" class="form-control"
                     placeholder="請輸入圖片連結" v-model="product.imageUrl">
             </div>
-            <img class="img-fluid" src="" alt="">
+            <img class="img-fluid" v-bind:src="product.imageUrl" alt="">
           </div>
-          <div>
-            <button class="btn btn-outline-primary btn-sm d-block w-100">
+          <div v-if="Array.isArray(product.imagesUrl)">
+            <div v-for="(img, key) in product.imagesUrl" :key="key">
+              <img class="img-fluid" v-bind:src="img" alt="">
+              <input type="text" class="form-control" 
+              v-model="product.imagesUrl[key]">
+            </div>
+            <div>
+            <button class="btn btn-outline-primary btn-sm d-block w-100"
+              @click="product.imagesUrl.push('')">
               新增圖片
             </button>
+            </div>
+            <div>
+              <button class="btn btn-outline-danger btn-sm d-block w-100"
+              @click="product.imagesUrl.pop()">
+                刪除圖片
+              </button>
+            </div>
           </div>
-          <div>
-            <button class="btn btn-outline-danger btn-sm d-block w-100">
-              刪除圖片
+          <div v-else>
+            <button class="btn btn-outline-primary btn-sm d-block w-100" @click="createImages">
+              新增圖片
             </button>
-          </div>
+          </div>          
         </div>
         <div class="col-sm-8">
           <div class="mb-3">
@@ -343,6 +357,10 @@ app.component('product-modal', {
     },
     cancelModal() {
       this.$emit('close');
+    },
+    createImages() {
+      this.product.imagesUrl = [];
+      this.product.imagesUrl.push('');
     }
   },
   watch: {
