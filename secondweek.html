@@ -8,7 +8,14 @@
         <div class="container">
           <div class="row py-3">
             <div class="col-md-6">
-              <h2>產品列表</h2>
+              <div class="row">
+                <div class="col-md-6">
+                  <h2 class="w50">產品列表</h2>
+                </div>
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product-modal" style="float: right;" @click="openNewModal()">新增項目</button>
+                </div>                
+              </div>              
               <table class="table table-hover mt-4">
                 <thead>
                   <tr>
@@ -19,16 +26,19 @@
                     <th width="120">
                       售價
                     </th>
-                    <th width="150">
+                    <th width="140">
                       是否啟用
                     </th>
-                    <th width="120">
+                    <th width="140">
                       查看細節
+                    </th>
+                    <th width="180">
+                      動作
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="product in products" :key="product.id">
+                  <tr v-for="product in products" :key="product.id" v-bind:class="[{'table-secondary':!product.is_enabled}]">
                     <td width="150">{{ product.title }}</td>
                     <td width="120">
                       {{ product.origin_price }}
@@ -36,12 +46,16 @@
                     <td width="120">
                       {{ product.price  }}
                     </td>
-                    <td width="150">
+                    <td width="140">
                       <span v-show="product.is_enabled" class="text-success">啟用</span>
                       <span v-show="!product.is_enabled">未啟用</span>
                     </td>
-                    <td width="120">
+                    <td width="140">
                       <button type="button" class="btn btn-primary" @click="seeDetail(product)">查看細節</button>
+                    </td>
+                    <td width="200">
+                      <button type="button" class="btn btn-primary me-2" @click="openDeleteModal(product.id)">刪除</button>
+                      <button type="button" class="btn btn-primary" @click="openEditModal(product)">編輯</button>
                     </td>
                   </tr>
                 </tbody>
@@ -53,18 +67,47 @@
             </div>
           </div>
         </div>
+        <product-modal :isopen="modalopen" :isnew="isNewModal" :propitem="focusProduct" @close="closeModal"></product-modal>
+        <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
+           aria-labelledby="delProductModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content border-0">
+              <div class="modal-header bg-danger text-white">
+                <h5 id="delProductModalLabel" class="modal-title">
+                  <span>刪除產品</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                是否刪除
+                <strong class="text-danger"></strong> 商品(刪除後將無法恢復)。
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                  取消
+                </button>
+                <button type="button" class="btn btn-danger" @click="deleteProduct()">
+                  確認刪除
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>        
     </div>
+    
     <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js'
       integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw=='
-      crossorigin='anonymous'></script>
-      <script src="./secondweek.js"></script>
+      crossorigin='anonymous'></script>    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
       integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG"
       crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js"
       integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
       crossorigin="anonymous"></script>
+    <script src="./secondweek.js"></script>
 </body><html>
+
+
 
 
 <style>
